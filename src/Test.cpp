@@ -1,4 +1,5 @@
 #include "Test.h"
+#include <stdexcept>
 
 //https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c?page=1&tab=votes#tab-top
 
@@ -33,68 +34,82 @@ void Test::calcul(std::vector<std::string> sortie)
     sortie.erase(std::begin(sortie) + 3, std::begin(sortie) + 7);
   }
   */
-  u_int64_t taille {std::size(sortie)};
-
-  for (uint i {0}; i < taille; i++)
+  try
   {
-    if (sortie[i] == "*")
-    {
-      sortie[i - 3] = std::to_string(std::stoll(sortie[i - 3]) * std::stoll(sortie[i + 1]));
-      sortie[i - 1] = std::to_string(std::stoll(sortie[i - 1]) * std::stoll(sortie[i + 3]));
-      sortie.erase(std::begin(sortie) + i, std::begin(sortie) + 4 + i);
+    u_int64_t taille {std::size(sortie)};
 
-      taille = std::size(sortie);
-      i = 0;
-      std::cout << "--------------------------" << std::endl;
-      std::cout << "Multiplication" << std::endl;
-      for (std::string k : sortie)
+    for (uint i {0}; i < taille; i++)
+    {
+      if (sortie[i] == "*")
       {
-        std::cout << k;
+        sortie[i - 3] = std::to_string(std::stoll(sortie[i - 3]) * std::stoll(sortie[i + 1]));
+        sortie[i - 1] = std::to_string(std::stoll(sortie[i - 1]) * std::stoll(sortie[i + 3]));
+        sortie.erase(std::begin(sortie) + i, std::begin(sortie) + 4 + i);
+
+        taille = std::size(sortie);
+        i = 0;
+        std::cout << "--------------------------" << std::endl;
+        std::cout << "Multiplication" << std::endl;
+        for (std::string k : sortie)
+        {
+          std::cout << k;
+        }
+        std::cout << "\n";
+        std::cout << "--------------------------" << std::endl;
       }
-      std::cout << "\n";
-      std::cout << "--------------------------" << std::endl;
+
     }
 
-  }
-
-  m_num = std::stoll(sortie[0]);
-  m_den = std::stoll(sortie[2]);
-  int pgcd {0};
-  pgcd = gcd(m_num, m_den);
-  m_num /= pgcd;
-  m_den /= pgcd;
-
-  for (u_int8_t i {3}; i < taille; i += 3)
-  {
-    if (sortie[i] == "+")
-    {
-      sortie.erase(std::begin(sortie) + i);
-      taille = std::size(sortie);
-    }
-    m_num = m_num * std::stoll(sortie[i + 2]) + m_den * std::stoll(sortie[i]);
-    m_den *= std::stoll(sortie[i + 2]);
+    m_num = std::stoll(sortie[0]);
+    m_den = std::stoll(sortie[2]);
+    int pgcd {0};
     pgcd = gcd(m_num, m_den);
     m_num /= pgcd;
     m_den /= pgcd;
-    std::cout << "--------------------------" << std::endl;
-    std::cout << "Addition - Soustraction" << std::endl;
 
-    std::cout << m_num << "/" << m_den;
-    std::string k;
-    
-    for (uint j = i + 3; j < taille; ++j)
+    for (u_int8_t i {3}; i < taille; i += 3)
     {
-      if (isNbr(k) && isNbr(sortie[j]))
+      if (sortie[i] == "+")
       {
-        std::cout << "+";
+        sortie.erase(std::begin(sortie) + i);
+        taille = std::size(sortie);
       }
-      std::cout << sortie[j];
-      k = sortie[j];
+      m_num = m_num * std::stoll(sortie[i + 2]) + m_den * std::stoll(sortie[i]);
+      m_den *= std::stoll(sortie[i + 2]);
+      pgcd = gcd(m_num, m_den);
+      m_num /= pgcd;
+      m_den /= pgcd;
+      std::cout << "--------------------------" << std::endl;
+      std::cout << "Addition - Soustraction" << std::endl;
+
+      std::cout << m_num << "/" << m_den;
+      std::string k;
+
+      for (uint j = i + 3; j < taille; ++j)
+      {
+        if (isNbr(k) && isNbr(sortie[j]))
+        {
+          std::cout << "+";
+        }
+        std::cout << sortie[j];
+        k = sortie[j];
+      }
+
+      std::cout << "\n";
+      std::cout << "--------------------------" << std::endl;
     }
-    
-    std::cout << "\n";
-    //std::cout << m_num << "/" << m_den << "\n";
-    std::cout << "--------------------------" << std::endl;
+  }
+  catch (std::invalid_argument const &e)
+  {
+    std::cout << "Erreur de saisie : " << e.what() << std::endl;
+  }
+  catch (std::overflow_error const &e)
+  {
+    std::cout << "Limites de calcul dépassées : " << e.what() << std::endl;
+  }
+  catch (std::exception const &e)
+  {
+    std::cout << "Erreur globale : " << e.what() << std::endl;
   }
 }
 
@@ -129,18 +144,12 @@ std::vector<std::string> Test::extraire(std::string entree)
         ++j;
         isNbr = true;
       }
-
     }
   }
-  /*
-  for (std::string k : bloc)
-  {
-    std::cout << "bloc = " << k << std::endl;
-  }
-  */
   return bloc;
 }
-void Test::afficher(std::string entree)
+
+void Test::afficher(std::string entree) const noexcept
 {
   std::cout << "--------------------------" << std::endl;
   std::cout << "Résultat final :" << std::endl;
