@@ -79,5 +79,6 @@
     "C_Cpp.vcFormat.space.removeAroundUnaryOperator": false,
     "C_Cpp.vcFormat.space.groupSquareBrackets": false,
     "C_Cpp.workspaceSymbols": "All",
-    "C_Cpp.vcFormat.space.pointerReferenceAlignment": "right"
+    "C_Cpp.vcFormat.space.pointerReferenceAlignment": "right",
+    "editor.bracketPairColorization.enabled": true
 }
