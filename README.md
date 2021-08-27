@@ -8,7 +8,7 @@ addition, soustraction et multiplication de fractions sous forme simplifiée
 g++ -g main.cpp src/*.cpp -std=c++20 -I include -o main -Wall -Wextra -O2
 ```
 
-### Remarque : 
+### Remarques : 
 * ne pas taper d'espace
 * les calculs ne portent que sur des entiers
 
