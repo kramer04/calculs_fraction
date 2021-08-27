@@ -37,15 +37,24 @@ void Test::calcul(std::vector<std::string> sortie)
   try
   {
     u_int64_t taille {std::size(sortie)};
+    int pgcd {0};
 
     for (uint i {0}; i < taille; i++)
     {
       if (sortie[i] == "*")
       {
+        m_num = std::stoll(sortie[i - 3]) * std::stoll(sortie[i + 1]);
+        m_den = std::stoll(sortie[i - 1]) * std::stoll(sortie[i + 3]);
+        pgcd = gcd(m_num, m_den);
+        m_num /= pgcd;
+        m_den /= pgcd;
+        sortie[i - 3] = std::to_string(m_num);
+        sortie[i - 1] = std::to_string(m_den);
+        /*
         sortie[i - 3] = std::to_string(std::stoll(sortie[i - 3]) * std::stoll(sortie[i + 1]));
         sortie[i - 1] = std::to_string(std::stoll(sortie[i - 1]) * std::stoll(sortie[i + 3]));
+        */
         sortie.erase(std::begin(sortie) + i, std::begin(sortie) + 4 + i);
-
         taille = std::size(sortie);
         i = 0;
         std::cout << "--------------------------" << std::endl;
@@ -62,7 +71,7 @@ void Test::calcul(std::vector<std::string> sortie)
 
     m_num = std::stoll(sortie[0]);
     m_den = std::stoll(sortie[2]);
-    int pgcd {0};
+
     pgcd = gcd(m_num, m_den);
     m_num /= pgcd;
     m_den /= pgcd;
@@ -151,9 +160,9 @@ std::vector<std::string> Test::extraire(std::string entree)
 
 void Test::afficher(std::string entree) const noexcept
 {
-  std::cout << "--------------------------" << std::endl;
-  std::cout << "Résultat final :" << std::endl;
-  std::cout << entree << " est égal à\n";
-  std::cout << m_num << "/" << m_den << std::endl;
-  std::cout << "--------------------------" << std::endl;
+  std::cout << "--------------------------\n"
+    << "Résultat final :\n"
+    << entree << " est égal à\n"
+    << m_num << "/" << m_den << "\n"
+    << "--------------------------" << std::endl;
 }
